@@ -1,0 +1,228 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0 ">
+    </head>
+    <title>Weather application</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family:'Poppins', sans-serif ;
+            box-sizing: border-box;
+            /* background: linear-gradient(45deg, #0a0a0a, #01374e ); */
+            
+        }
+        body{
+            background:  #023145 ;
+        }
+        .card{
+            width: 90%;
+            max-width: 30rem;
+            background: linear-gradient(50deg, #076790, #ffffff);
+            color: #fff;
+            margin: 10rem auto 0;
+            border-radius: 2rem;
+            padding: 2rem 2rem;
+            text-align: center;
+           
+
+        }
+        .search{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .search input{
+             border: 0;
+             outline: 0;
+             background: #ebfffc;
+             color: #555;
+             padding: 1rem 3rem;
+             height: 4rem;
+             border-radius: 3rem;
+             flex: 1;
+             margin-right: 1.5rem;
+             font-size: 1.2rem;
+        }
+        .search button{
+            border: 0;
+            outline: 0;
+            background: #ebfffc;
+            border-radius: 50%;
+            width: 5rem;
+            height: 3.5rem;
+            cursor: pointer;
+            
+        }
+        .search button img{
+            width: 1rem;
+
+        }
+        .search button:hover{
+            transform: rotate(3000deg);
+            transition: 10s;
+        }
+        .weather-icon{
+            width: 10rem;
+            margin-top: 2rem;
+            margin-right: 14rem;
+
+        }
+        .weather-icon:hover{
+            transition: 7s;
+            transform: translateX(250px);
+        }
+        .weather h1{
+            font-size: 4rem;
+            font-weight: 500;
+        }
+        .weather h2{
+            font-size: 5rem;
+            font-weight: 400;
+            margin-top: -0.5rem;
+        }
+        .details{
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+           padding: 0 2rem;
+           margin-top: 5rem; 
+        }
+        .col{
+            display: flex;
+            align-items: center;
+            text-align: left;
+        }
+        .humimg:hover{
+            
+            transform: translate3d(180px, -330px, 0);
+            transition: 2s;
+            color: #01374e;
+        }
+        .winimg:hover{
+            
+            transform: translate3d(-20px, -330px, 0);
+            transition: 2s;
+            color: #01374e;
+        }
+        .col img{
+            width: 40px;
+            margin-right: 10px;
+        }
+        .humidity .wind{
+            font-size: 8rem;
+            margin-top: -6rem;
+        }
+        @media(max-width:700px){
+           
+            .card{
+                display: flex;
+                flex-wrap: wrap;
+                width: 25rem;
+                margin: 10rem 0.7rem;
+                padding-top: 2rem;
+               
+            }
+            .search input{
+           
+             padding: 1rem 0.8rem;
+             height: 4rem;
+             border-radius: 3rem;
+             flex: 1;
+             margin-right: 1rem;
+             font-size: 1.1rem;
+        }
+        .search button{
+            background: #ebfffc;
+            border-radius: 50%;
+            width: 3.7rem;
+            height: 3.5rem;
+            cursor: pointer;
+            
+        }
+        .search button img{
+            width: 1rem;
+
+        }
+        }
+    </style>
+    <body>
+        <div class="card">
+            <div class="search">
+                <input type="text" placeholder="Enter the city name" spellcheck="false">
+                <button>
+                    <img src="search.png" alt="">
+                </button>
+            </div>
+            <div class="weather">
+                <img src="rain.png" class="weather-icon" alt="">
+                <h1 class="temp">22 °C</h1>
+                <h2 class="city">Bhopal</h2>
+                <div class="details">
+                    <div class="col humimg">
+                        <img src="humidity.png" alt="" >
+                        <div>
+                            <p class="humidity">50%</p>
+                            <p>Humidity</p>
+                        </div>
+                    </div>
+                    <div class="col winimg">
+                        <img src="wind.png" alt="">
+                        <div>
+                            <p class="wind">15 km/h</p>
+                            <p>wind speed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+    <script>
+        const apikey="863242cfb2b1d357e6093d9a4df19a4b";
+        const apiUrl="https://api.openweathermap.org/data/2.5/weather?q=";
+        const searchBox = document.querySelector(".search input")
+        const searchBtn = document.querySelector(".search button")
+        const weatherIcon= document.querySelector(".weather-icon")
+
+        async function checkWeather(city){
+            const response = await fetch(apiUrl +city+ '&appid=f329895b9862e38f45a48b8fdcd2bd0e');
+            var data = await response.json();
+
+            console.log(data);
+            document.querySelector(".city").innerHTML = data.name;
+            document.querySelector(".temp").innerHTML = Math.round(data.main.temp)  - 273 +"°C";
+            document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+            document.querySelector(".wind").innerHTML = Math.round(data.wind.speed) + " Km/h";
+            if(data.weather[0].main == "Clouds"){
+                weatherIcon.src="clouds.png"
+            }
+            else if(data.weather[0].main == "Clear"){
+                weatherIcon.src="clear.png"
+            }
+            else if(data.weather[0].main == "Mist"){
+                weatherIcon.src="mist.png"
+            }
+            else if(data.weather[0].main == "Drizzle"){
+                weatherIcon.src="drizzle.png"
+            }
+            else if(data.weather[0].main == "Rain"){
+                weatherIcon.src="rain.png"
+            }
+
+            
+        }
+        searchBtn.addEventListener("click", ()=>{
+            checkWeather(searchBox.value);
+
+        })
+        searchBox.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkWeather(searchBox.value);
+
+            }
+        });
+        
+    </script>
+</html>
